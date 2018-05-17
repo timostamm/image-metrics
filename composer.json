@@ -17,12 +17,12 @@
     },
     "autoload" : {
         "psr-4" : {
-            "TS\\Media\\" : "src"
+            "TS\\Media\\ImageMetrics\\" : "src"
         }
     },
     "autoload-dev" : {
         "psr-4" : {
-            "TS\\Media\\" : "tests"
+            "TS\\Media\\ImageMetrics\\" : "tests"
         }
     }
 }
