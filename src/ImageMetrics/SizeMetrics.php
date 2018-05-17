@@ -28,7 +28,7 @@ class SizeMetrics extends Size
      * @param Size $size
      * @return self
      */
-    public static function createFromSize(Size $size)
+    public static function createFromSize(Size $size):SizeMetrics
     {
         return new SizeMetrics($size->width, $size->height);
     }
@@ -40,7 +40,7 @@ class SizeMetrics extends Size
      * @param number $height
      * @return self
      */
-    public static function create($width, $height)
+    public static function create($width, $height):SizeMetrics
     {
         return new SizeMetrics($width, $height);
     }
@@ -62,7 +62,7 @@ class SizeMetrics extends Size
      * @param string $align
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropToRatio($ratio, $align = "center")
+    public function cropToRatio($ratio, $align = "center"):Rect
     {
         $size = $ratio > 1
             ? new Size($this->width, $this->width / $ratio)
@@ -79,7 +79,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropLeft($length)
+    public function cropLeft($length):Rect
     {
         $v = Length::eval($length, $this->width);
         if ($v > $this->width) {
@@ -97,7 +97,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropRight($length)
+    public function cropRight($length):Rect
     {
         $v = Length::eval($length, $this->width);
         if ($v > $this->width) {
@@ -115,7 +115,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropTop($length)
+    public function cropTop($length):Rect
     {
         $v = Length::eval($length, $this->height);
         if ($v > $this->height) {
@@ -133,7 +133,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropBottom($length)
+    public function cropBottom($length):Rect
     {
         $v = Length::eval($length, $this->height);
         if ($v > $this->height) {
@@ -154,7 +154,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropRect($x, $y, $width, $height)
+    public function cropRect($x, $y, $width, $height):Rect
     {
         $r1 = new Rect(0, 0, $this->width, $this->height);
         $r2 = $r1->getIntersection($x, $y, $width, $height);
@@ -171,10 +171,9 @@ class SizeMetrics extends Size
      *
      * @param mixed $length
      * @param string $horizontalAlign
-     * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropWidth($length, $horizontalAlign = 'center')
+    public function cropWidth($length, $horizontalAlign = 'center'):Rect
     {
         $alignment = Alignment::parseH($horizontalAlign);
         $v = Length::eval($length, $this->width);
@@ -193,10 +192,9 @@ class SizeMetrics extends Size
      *
      * @param mixed $length
      * @param string $horizontalAlign
-     * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropWidthBy($length, $horizontalAlign = 'center')
+    public function cropWidthBy($length, $horizontalAlign = 'center'):Rect
     {
         $alignment = Alignment::parseH($horizontalAlign);
         $v = Length::eval($length, $this->width);
@@ -216,10 +214,9 @@ class SizeMetrics extends Size
      *
      * @param mixed $length
      * @param string $verticalAlign
-     * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropHeight($length, $verticalAlign = 'center')
+    public function cropHeight($length, $verticalAlign = 'center'):Rect
     {
         $alignment = Alignment::parseV($verticalAlign);
         $v = Length::eval($length, $this->height);
@@ -242,7 +239,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropHeightBy($length, $verticalAlign = 'center')
+    public function cropHeightBy($length, $verticalAlign = 'center'):Rect
     {
         $alignment = Alignment::parseV($verticalAlign);
         $v = Length::eval($length, $this->height);
@@ -263,7 +260,7 @@ class SizeMetrics extends Size
      * @param string $align
      * @return \TS\Media\ImageMetrics\Rect
      */
-    public function cropToSize($width, $height, $align = 'center')
+    public function cropToSize($width, $height, $align = 'center'):Rect
     {
         $alignment = Alignment::parse($align);
         $w = Length::eval($width, $this->width);
@@ -283,7 +280,7 @@ class SizeMetrics extends Size
      * @param mixed $bottom
      * @return Rect
      */
-    public function cropSides($left = 0, $top = 0, $right = 0, $bottom = 0)
+    public function cropSides($left = 0, $top = 0, $right = 0, $bottom = 0):Rect
     {
         $l = Length::eval($left, $this->width);
         $t = Length::eval($top, $this->height);
@@ -303,9 +300,10 @@ class SizeMetrics extends Size
      * @param number|string $width
      * @param number|string $height
      * @param string $align
+     * @param int $upsize
      * @return Resize
      */
-    public function cover($width, $height, $align = 'center', $upsize = self::UPSIZE_ALLOW)
+    public function cover($width, $height, $align = 'center', $upsize = self::UPSIZE_ALLOW):Resize
     {
 
         $alignment = Alignment::parse($align);
@@ -342,7 +340,7 @@ class SizeMetrics extends Size
      * @param int $upsize
      * @return Resize
      */
-    public function contain($width, $height, $align = 'center', $upsize = self::UPSIZE_ALLOW)
+    public function contain($width, $height, $align = 'center', $upsize = self::UPSIZE_ALLOW):Resize
     {
 
         $alignment = Alignment::parse($align);
@@ -384,7 +382,7 @@ class SizeMetrics extends Size
      * @throws \InvalidArgumentException
      * @return Resize
      */
-    public function resize($width, $height, $flags = self::RESIZE_STRETCH | self::UPSIZE_ALLOW | self::RATIO_IGNORE, $align = 'center')
+    public function resize($width, $height, $flags = self::RESIZE_STRETCH | self::UPSIZE_ALLOW | self::RATIO_IGNORE, $align = 'center'):Resize
     {
 
         $requestSize = Size::parse($width, $height);
@@ -394,7 +392,7 @@ class SizeMetrics extends Size
         $contain = ($flags & self::RESIZE_CONTAIN) === self::RESIZE_CONTAIN;
         $stretch = ($flags & self::RESIZE_STRETCH) === self::RESIZE_STRETCH;
         if ($cover + $contain + $stretch > 1) {
-            throw new \InvalidArgumentException("Multiple resize flags set.");
+            throw new InvalidArgumentException("Multiple resize flags set.");
         }
 
         if ($cover) {
@@ -434,7 +432,7 @@ class SizeMetrics extends Size
      * @param int $flags
      * @return Size
      */
-    public function resizeWidth($width, $flags = self::RATIO_PRESERVE | self::UPSIZE_ALLOW)
+    public function resizeWidth($width, $flags = self::RATIO_PRESERVE | self::UPSIZE_ALLOW):Size
     {
         $w = Length::eval($width, $this->width);
 
@@ -458,7 +456,7 @@ class SizeMetrics extends Size
      * @param int $flags
      * @return Size
      */
-    public function resizeHeight($height, $flags = self::RATIO_PRESERVE | self::UPSIZE_ALLOW)
+    public function resizeHeight($height, $flags = self::RATIO_PRESERVE | self::UPSIZE_ALLOW):Size
     {
         $h = Length::eval($height, $this->height);
 
@@ -474,18 +472,12 @@ class SizeMetrics extends Size
     }
 
 
-    private static function parseUpsizeAllow($flags, $default)
+    private static function parseUpsizeAllow(int $flags, bool $default):bool
     {
-        if (is_int($flags) === false) {
-            throw new \InvalidArgumentException("Unexpected flag type.");
-        }
-        if (is_bool($default) === false) {
-            throw new \InvalidArgumentException("Unexpected default type.");
-        }
         $allow = ($flags & self::UPSIZE_ALLOW) === self::UPSIZE_ALLOW;
         $prevent = ($flags & self::UPSIZE_PREVENT) === self::UPSIZE_PREVENT;
         if ($allow && $prevent) {
-            throw new \InvalidArgumentException("Cannot set both UPSIZE_ALLOW and UPSIZE_PREVENT.");
+            throw new InvalidArgumentException("Cannot set both UPSIZE_ALLOW and UPSIZE_PREVENT.");
         }
         if ($allow) {
             return true;
@@ -497,18 +489,12 @@ class SizeMetrics extends Size
     }
 
 
-    private static function parsePreventUpsize($flags, $default)
+    private static function parsePreventUpsize(int $flags, bool $default):bool
     {
-        if (is_int($flags) === false) {
-            throw new \InvalidArgumentException("Unexpected flag type.");
-        }
-        if (is_bool($default) === false) {
-            throw new \InvalidArgumentException("Unexpected default type.");
-        }
         $allow = ($flags & self::UPSIZE_ALLOW) === self::UPSIZE_ALLOW;
         $prevent = ($flags & self::UPSIZE_PREVENT) === self::UPSIZE_PREVENT;
         if ($allow && $prevent) {
-            throw new \InvalidArgumentException("Cannot set both UPSIZE_ALLOW and UPSIZE_PREVENT.");
+            throw new InvalidArgumentException("Cannot set both UPSIZE_ALLOW and UPSIZE_PREVENT.");
         }
         if ($allow) {
             return false;
@@ -520,18 +506,12 @@ class SizeMetrics extends Size
     }
 
 
-    private static function parseKeepRatio($flags, $default)
+    private static function parseKeepRatio(int $flags, bool $default):bool
     {
-        if (is_int($flags) === false) {
-            throw new \InvalidArgumentException("Unexpected flag type.");
-        }
-        if (is_bool($default) === false) {
-            throw new \InvalidArgumentException("Unexpected default type.");
-        }
         $keep = ($flags & self::RATIO_PRESERVE) === self::RATIO_PRESERVE;
         $ignore = ($flags & self::RATIO_IGNORE) === self::RATIO_IGNORE;
         if ($keep && $ignore) {
-            throw new \InvalidArgumentException("Cannot set both RATIO_PRESERVE and RATIO_IGNORE.");
+            throw new InvalidArgumentException("Cannot set both RATIO_PRESERVE and RATIO_IGNORE.");
         }
         if ($keep) {
             return true;

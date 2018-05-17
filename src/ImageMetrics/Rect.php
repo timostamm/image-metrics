@@ -25,19 +25,19 @@ class Rect
     {
         if (!is_numeric($x)) {
             $msg = sprintf('Expected argument $x to be numeric, but got a %s', gettype($x));
-            throw new \UnexpectedValueException($msg);
+            throw new InvalidArgumentException($msg);
         }
         if (!is_numeric($y)) {
             $msg = sprintf('Expected argument $y to be numeric, but got a %s', gettype($y));
-            throw new \UnexpectedValueException($msg);
+            throw new InvalidArgumentException($msg);
         }
         if (!is_numeric($width)) {
             $msg = sprintf('Expected argument $width to be numeric, but got a %s', gettype($width));
-            throw new \UnexpectedValueException($msg);
+            throw new InvalidArgumentException($msg);
         }
         if (!is_numeric($height)) {
             $msg = sprintf('Expected argument $height to be numeric, but got a %s', gettype($height));
-            throw new \UnexpectedValueException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $this->x = $x;
         $this->y = $y;
@@ -47,7 +47,7 @@ class Rect
     }
 
 
-    public function normalize()
+    public function normalize():void
     {
         if ($this->width < 0) {
             $this->x = $this->x + $this->width;
@@ -61,7 +61,7 @@ class Rect
     }
 
 
-    protected function updateLeftTopRightBottom()
+    protected function updateLeftTopRightBottom():void
     {
         if ($this->width < 0) {
             $this->left = $this->x + $this->width;
@@ -78,19 +78,19 @@ class Rect
     }
 
 
-    public function getPosition()
+    public function getPosition():Point
     {
         return new Point($this->x, $this->y);
     }
 
 
-    public function getSize()
+    public function getSize():Size
     {
         return new Size($this->width, $this->height);
     }
 
 
-    public function getIntersection($x, $y, $width, $height)
+    public function getIntersection($x, $y, $width, $height):Rect
     {
         if (false === $this->intersects($x, $y, $width, $height)) {
             return null;
@@ -110,7 +110,7 @@ class Rect
     }
 
 
-    public function intersects($x, $y, $width, $height)
+    public function intersects($x, $y, $width, $height):bool
     {
 
         $r1 = clone $this;
@@ -126,7 +126,7 @@ class Rect
     }
 
 
-    public function moveBy($dx, $dy)
+    public function moveBy($dx, $dy):void
     {
         $this->x += $dx;
         $this->y += $dy;
@@ -134,7 +134,7 @@ class Rect
     }
 
 
-    public function resizeBy($dx, $dy)
+    public function resizeBy($dx, $dy):void
     {
         $this->width += $dx;
         $this->width += $dy;
@@ -142,7 +142,7 @@ class Rect
     }
 
 
-    public function floor()
+    public function floor():self
     {
         $this->x = floor($this->x);
         $this->y = floor($this->y);
@@ -152,7 +152,7 @@ class Rect
         return $this;
     }
 
-    public function ceil()
+    public function ceil():self
     {
         $this->x = ceil($this->x);
         $this->y = ceil($this->y);
@@ -162,7 +162,7 @@ class Rect
         return $this;
     }
 
-    public function round()
+    public function round():self
     {
         $this->x = round($this->x);
         $this->y = round($this->y);

@@ -30,19 +30,19 @@ class Point
     }
 
 
-    public function floor()
+    public function floor():void
     {
         $this->x = floor($this->x);
         $this->y = floor($this->y);
     }
 
-    public function ceil()
+    public function ceil():void
     {
         $this->x = ceil($this->x);
         $this->y = ceil($this->y);
     }
 
-    public function round()
+    public function round():void
     {
         $this->x = round($this->x);
         $this->y = round($this->y);

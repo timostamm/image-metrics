@@ -22,7 +22,7 @@ class Size
      * @param Size $b
      * @return float
      */
-    public static function compareMax(Size $a, Size $b)
+    public static function compareMax(Size $a, Size $b):float
     {
         return max((float)$b->width / (float)$a->width, (float)$b->height / (float)$a->height);
     }
@@ -34,20 +34,20 @@ class Size
      * @param Size $b
      * @return float
      */
-    public static function compareMin(Size $a, Size $b)
+    public static function compareMin(Size $a, Size $b):float
     {
         return min((float)$b->width / (float)$a->width, (float)$b->height / (float)$a->height);
     }
 
-    public static function parse($width, $height)
+    public static function parse($width, $height):Size
     {
         $w = Length::parse($width);
         $h = Length::parse($height);
         if ($w->isRelative) {
-            throw new \InvalidArgumentException(sprintf('Invalid width %s, value must be absolute.', $width));
+            throw new InvalidArgumentException(sprintf('Invalid width %s, value must be absolute.', $width));
         }
         if ($h->isRelative) {
-            throw new \InvalidArgumentException(sprintf('Invalid width %s, value must be absolute.', $height));
+            throw new InvalidArgumentException(sprintf('Invalid width %s, value must be absolute.', $height));
         }
         return new Size($w->pixel, $h->pixel);
     }
@@ -56,46 +56,46 @@ class Size
     {
         if (!is_numeric($width)) {
             $msg = sprintf('Expected argument $width to be numeric, but got a %s', gettype($width));
-            throw new \UnexpectedValueException($msg);
+            throw new InvalidArgumentException($msg);
         }
         if (!is_numeric($height)) {
             $msg = sprintf('Expected argument $height to be numeric, but got a %s', gettype($height));
-            throw new \UnexpectedValueException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $this->width = $width;
         $this->height = $height;
     }
 
-    public function getRatio()
+    public function getRatio():float
     {
         return (float)$this->width / (float)$this->height;
     }
 
-    public function getArea()
+    public function getArea():float
     {
         return $this->width * $this->height;
     }
 
-    public function contains(Size $size)
+    public function contains(Size $size):bool
     {
         return $this->width >= $size->width && $this->height >= $size->height;
     }
 
-    public function floor()
+    public function floor():self
     {
         $this->width = floor($this->width);
         $this->height = floor($this->height);
         return $this;
     }
 
-    public function ceil()
+    public function ceil():self
     {
         $this->width = (int)ceil($this->width);
         $this->height = (int)ceil($this->height);
         return $this;
     }
 
-    public function round()
+    public function round():self
     {
         $this->width = (int)round($this->width);
         $this->height = (int)round($this->height);

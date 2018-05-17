@@ -52,7 +52,7 @@ class Resize
     /**
      * Adjusts negative offsets in the target.
      */
-    private function normalizeToRect()
+    private function normalizeToRect():void
     {
         $rx = $this->fromRectInput->width / $this->toRectInput->width;
         $ry = $this->fromRectInput->height / $this->toRectInput->height;

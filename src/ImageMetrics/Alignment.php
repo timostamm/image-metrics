@@ -58,7 +58,7 @@ class Alignment
 
 
     /**
-     * Parses an alignment string.
+     * Parses an alignment expression.
      *
      * Align with a single keyword: (other value becomes "center")
      * left
@@ -84,14 +84,13 @@ class Alignment
      * left 10 top 10
      * right bottom 10%
      *
-     * @param string $str
-     * @throws \Exception
+     * @param string $expr
      * @return Alignment
      */
-    public static function parse($str)
+    public static function parse($expr):Alignment
     {
 
-        preg_match(self::RE_horizontal_keyword_and_vertical_keyword, $str, $m);
+        preg_match(self::RE_horizontal_keyword_and_vertical_keyword, $expr, $m);
         if (count($m) > 1) {
 
             $a = new Alignment($m[1], $m[3]);
@@ -117,7 +116,7 @@ class Alignment
             return $a;
         }
 
-        preg_match(self::RE_vertical_keyword_and_horizontal_keyword, $str, $m);
+        preg_match(self::RE_vertical_keyword_and_horizontal_keyword, $expr, $m);
         if (count($m) > 1) {
 
             $a = new Alignment($m[3], $m[1]);
@@ -144,52 +143,52 @@ class Alignment
         }
 
 
-        preg_match(self::RE_horizontal_keyword_and_vertical_length, $str, $m);
+        preg_match(self::RE_horizontal_keyword_and_vertical_length, $expr, $m);
         if (count($m) === 3) {
             return new Alignment($m[1], $m[2]);
         }
 
-        preg_match(self::RE_vertical_length_and_horizontal_keyword, $str, $m);
+        preg_match(self::RE_vertical_length_and_horizontal_keyword, $expr, $m);
         if (count($m) === 3) {
             return new Alignment($m[2], $m[1]);
         }
 
 
-        preg_match(self::RE_horizontal_length_and_vertical_keyword, $str, $m);
+        preg_match(self::RE_horizontal_length_and_vertical_keyword, $expr, $m);
         if (count($m) === 3) {
             return new Alignment($m[1], $m[2]);
         }
 
-        preg_match(self::RE_vertical_keyword_and_horizontal_length, $str, $m);
+        preg_match(self::RE_vertical_keyword_and_horizontal_length, $expr, $m);
         if (count($m) === 3) {
             return new Alignment($m[2], $m[1]);
         }
 
 
-        preg_match(self::RE_horizontal_keyword, $str, $m);
+        preg_match(self::RE_horizontal_keyword, $expr, $m);
         if (count($m) === 2) {
             return new Alignment($m[1], 'center');
         }
 
-        preg_match(self::RE_vertical_keyword, $str, $m);
+        preg_match(self::RE_vertical_keyword, $expr, $m);
         if (count($m) === 2) {
             return new Alignment('center', $m[1]);
         }
 
 
-        preg_match(self::RE_horizontal_any_and_vertical_any, $str, $m);
+        preg_match(self::RE_horizontal_any_and_vertical_any, $expr, $m);
         if (count($m) === 3) {
             return new Alignment($m[1], $m[2]);
         }
 
 
-        preg_match(self::RE_horizontal_any, $str, $m);
+        preg_match(self::RE_horizontal_any, $expr, $m);
         if (count($m) === 2) {
             return new Alignment($m[1], 'center');
         }
 
 
-        throw new \Exception('invalid alignment: ' . $str);
+        throw new InvalidArgumentException('invalid alignment: ' . $expr);
     }
 
 
@@ -213,10 +212,9 @@ class Alignment
      * Parse a horizontal alignment string, use "center" for vertical alignment.
      *
      * @param string $str
-     * @throws \Exception
      * @return Alignment
      */
-    public static function parseH($str)
+    public static function parseH($str):Alignment
     {
 
         preg_match(self::RE_horizontal_keyword_and_offset, $str, $m);
@@ -241,7 +239,7 @@ class Alignment
             return new Alignment($str, 'center');
         }
 
-        throw new \Exception('invalid alignment: ' . $str);
+        throw new InvalidArgumentException('invalid alignment: ' . $str);
     }
 
 
@@ -252,14 +250,13 @@ class Alignment
     /**
      * Parse a horizontal alignment string, use "center" for horizontal alignment.
      *
-     * @param string $str
-     * @throws \Exception
+     * @param string $expr
      * @return Alignment
      */
-    public static function parseV($str)
+    public static function parseV($expr):Alignment
     {
 
-        preg_match(self::RE_vertical_keyword_and_offset, $str, $m);
+        preg_match(self::RE_vertical_keyword_and_offset, $expr, $m);
         if (count($m) > 1) {
 
             $a = new Alignment('center', $m[1]);
@@ -277,11 +274,11 @@ class Alignment
 
         }
 
-        if (Length::tryParse($str, $len)) {
-            return new Alignment('center', $str);
+        if (Length::tryParse($expr, $len)) {
+            return new Alignment('center', $expr);
         }
 
-        throw new \Exception('invalid alignment: ' . $str);
+        throw new InvalidArgumentException('invalid alignment: ' . $expr);
     }
 
 
@@ -305,18 +302,17 @@ class Alignment
      *
      * @param Size|Rect $container
      * @param Size|Point $child
-     * @throws \Exception
      * @return Point
      */
-    public function resolve($container, $child)
+    public function resolve($container, $child):Point
     {
         $outer = $this->rectFromSizeOrRect($container);
         $inner = $this->rectFromPointOrSize($child);
         if ($outer === null) {
-            throw new \Exception('invalid container type');
+            throw new InvalidArgumentException('invalid container type');
         }
         if ($inner === null) {
-            throw new \Exception('invalid child type');
+            throw new InvalidArgumentException('invalid child type');
         }
 
         $dx = $outer->width - $inner->width;
@@ -342,9 +338,9 @@ class Alignment
      * sets the unused value to false.
      *
      * @param mixed $value the alignment value, for example "left", "bottom", 150, "75%"
-     * @return array Array with pixel value and percent value.
+     * @return Length.
      */
-    private function normalizeAxisLength($value)
+    private function normalizeAxisLength($value):Length
     {
         if ($value === 'left' || $value === 'top') {
             return new Length(0, false);
@@ -359,7 +355,7 @@ class Alignment
     }
 
 
-    private function rectFromSizeOrRect($item)
+    private function rectFromSizeOrRect($item):?Rect
     {
         if ($item instanceof Rect) {
             return $item;
@@ -371,7 +367,7 @@ class Alignment
     }
 
 
-    private function rectFromPointOrSize($item)
+    private function rectFromPointOrSize($item):?Rect
     {
         if ($item instanceof Point) {
             return new Rect($item->x, $item->y, 0, 0);
